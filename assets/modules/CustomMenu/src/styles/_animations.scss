@@ -1,0 +1,17 @@
+////
+/// @author delphinpro <delphinpro@gmail.com>
+/// @copyright copyright © 2018 delphinpro
+/// @license licensed under the MIT license
+////
+
+.slide-down {
+  &-enter, &-leave-to {
+    transform: translateY(-100%);
+  }
+  &-enter-active, &-leave-active {
+    transition: 0.5s ease;
+  }
+  &-enter-to, &-leave {
+    transform: translateY(0);
+  }
+}

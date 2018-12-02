@@ -1,0 +1,21 @@
+////
+/// @author delphinpro <delphinpro@gmail.com>
+/// @copyright copyright © 2018 delphinpro
+/// @license licensed under the MIT license
+////
+
+.menu-list {
+  @extend %margins;
+  @extend %zero-margins;
+  width: 100%;
+  border: 1px solid #777777;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 15px;
+
+  td, th { border: 1px solid #777777; padding: 0.25rem 1rem; }
+
+  td:first-child { width: 50px; text-align: right; color: #999999;}
+
+  td:nth-child(n+4) { width: 10%; padding-left: 5px; padding-right: 5px; white-space: nowrap; }
+}
