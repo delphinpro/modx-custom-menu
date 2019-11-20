@@ -93,7 +93,7 @@ if (empty($menu)) return cmError("Меню '{$menuName}' не создано");
 
 $menu = $dbUtils->castTypes('menus', $menu, true);
 
-pre($menu);
+//pre($menu);
 
 $menuId = $menu['id'];
 
