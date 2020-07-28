@@ -8,6 +8,8 @@
 
 ![Пример меню в админке](misc/screen2.png)
 
+## Установка в EvolutionCMS
+
 Модуль не имеет инсталлятора.
 
 Для установки нужно
@@ -23,6 +25,8 @@
     return include MODX_BASE_PATH.'assets/modules/CustomMenu/CM.snippet.php';
     ```
 
+## Использование 
+
 Вызов сниппета (выбор меню можно указать по его идентификатору или имени, имя имеет больший приоритет, если указаны оба параметра):
 
 ```
@@ -33,3 +37,28 @@
 &tplItem=`@CODE: <li><a href="[+url+]">[+title+]</a>[+wrap+]</li>`
 ]]
 ```
+
+## Разработка
+
+Для пересборки модуля запустите webpack в корне модуля
+
+```
+webpack
+```
+
+При необходимости установите из npm зависимости
+
+* @babel/core
+* @babel/plugin-transform-runtime
+* @babel/plugin-transform-spread
+* @babel/preset-env
+* babel-loader
+* css-loader
+* mini-css-extract-plugin
+* node-sass
+* sass-loader
+* style-loader
+* uglifyjs-webpack-plugin
+* vue-loader
+* vue-template-compiler
+* webpack
