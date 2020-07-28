@@ -16,7 +16,7 @@ const UglifyJsPlugin       = require('uglifyjs-webpack-plugin');
 global.development = true;
 
 const nodeEnv          = global.development ? 'development' : 'production';
-const cssLoaderOptions = {minimize: false, url: false};
+const cssLoaderOptions = {url: false};
 
 let webpackConfig = {
     mode     : nodeEnv,
@@ -31,7 +31,7 @@ let webpackConfig = {
         publicPath: '',
         filename  : '[name].bundle.js',
     },
-    devtool  : global.development ? 'source-map' : null,
+    devtool  : global.development ? 'source-map' : false,
     module   : {
         rules: [
             {
