@@ -4,7 +4,7 @@
  * delphinpro <delphinpro@yandex.ru>
  */
 
-const ajaxUrl = APP.moduleUrl + '&action=';
+const ajaxUrl = window['APP']['moduleUrl'] + '&action=';
 export const url = actionName => ajaxUrl + actionName;
 
 const defaultConfig = {
@@ -65,7 +65,7 @@ export function Http(url, fd, options) {
         throw new Error(`Http(): Invalid url (should not be empty)`);
     }
 
-    console.log(_options.method, url, _options);
+    // console.log(_options.method, url, _options);
 
     return fetch(url, _options)
         .then(checkStatus)

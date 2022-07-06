@@ -3,7 +3,6 @@
   Copyright (c) 2018-2022
   delphinpro <delphinpro@yandex.ru>
   -->
-
 <script>
 export default {
     props: {

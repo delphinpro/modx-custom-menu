@@ -49,7 +49,7 @@ export default {
             <span class="title" @click.prevent="$emit('change', node)">
                 <span v-if="!node.replaced">{{ node.title }}</span>
                 <span
-                    v-if="node.title!==node.docTitle || node.replaced"
+                    v-if="(node.title!==node.docTitle || node.replaced) && node.docTitle"
                     class="text-muted"
                 >({{ node.docTitle }})</span>
             </span>

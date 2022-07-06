@@ -16,7 +16,7 @@ class DatabaseUtils
 {
     public $tables = [];
 
-    private $modx = null;
+    private $modx;
 
     public function __construct(DocumentParser $modx)
     {

@@ -86,6 +86,14 @@ button {
     td:last-child {
         padding-right: 0;
     }
+    td {
+        > .form-control-static {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            vertical-align: top;
+        }
+    }
 }
 
 $table-border-color: #dfdfdf;
@@ -98,9 +106,7 @@ $table-bg-dark: #25272d;
     border: 1px solid $table-border-color;
     .darkness & { border-color: $table-border-color-dark; }
 
-    &__row {
-        display: table-row;
-    }
+    &__row { display: table-row; }
     &__row:first-child + &__row &__cell { padding-top: 10px; }
     &__row:last-child &__cell { padding-bottom: 10px; }
 
@@ -136,9 +142,9 @@ $table-bg-dark: #25272d;
     }
 }
 
-@import "init";
-@import "animations";
-@import "alert";
+@import "init.scss";
+@import "animations.scss";
+@import "alert.scss";
 
 #errors {
     position: fixed;
@@ -167,26 +173,26 @@ $table-bg-dark: #25272d;
         text-overflow: ellipsis;
         color: #333;
         small { margin: 0 0.8em 0 0.2em; }
-        .btn-group {margin-left: auto;}
+        .btn-group { margin-left: auto; }
     }
     a:hover:not(.empty):not(.hidemenu),
     a.current { background-color: rgba(33, 150, 243, 0.1); }
     a.selected, .dragenter > a { background-color: rgba(0, 0, 0, 0.1); }
     a .title { padding: 0 0.2em; cursor: pointer; transition-duration: 0.15s; color: #0275d8; }
-    a.deleted .title { text-decoration: line-through;color: #a52a2a; }
-    a.unpublished .title { font-style: italic;color: #b68282; }
+    a.deleted .title { text-decoration: line-through; color: #a52a2a; }
+    a.unpublished .title { font-style: italic; color: #b68282; }
     a.hidemenu { opacity: 0.5; }
     a.hidemenu .title { cursor: default !important; color: #404040; }
     a.protected { position: relative; opacity: .5; background-color: transparent !important; }
 
     a .lockedResource { cursor: pointer; }
     a .editResource { margin-left: 0.2em; }
-    .indent { position: relative; z-index: -1; float: left;height: 1.5em; }
+    .indent { position: relative; z-index: -1; float: left; height: 1.5em; }
     .indent i { float: left; width: 1.5em; height: 1.2em; }
     .dragafter > a .indent,
     .dragbefore > a .indent { z-index: 1; }
     .dragafter > a .indent::after,
-    .dragbefore > a .indent::before { font: normal normal normal 1em/1em FontAwesome; position: absolute; right: 0.1em; bottom: -0.5em; display: block; height: 1em; content: "\f0da"; color: #f04}
+    .dragbefore > a .indent::before { font: normal normal normal 1em/1em FontAwesome; position: absolute; right: 0.1em; bottom: -0.5em; display: block; height: 1em; content: "\f0da"; color: #f04; }
     .dragbefore > a .indent::before { top: -0.5em; bottom: auto; }
     .empty { cursor: default; color: #aaa; }
     .icon { cursor: pointer; transition-duration: 0.15s; }

@@ -15,8 +15,7 @@ function itemSaveAction(DocumentParser $modx, DatabaseUtils $db)
     $itemData = $db->castTypes('menu_items', $_POST);
 
     if (!$itemData['menu_id']) sendError(__FUNCTION__.': menuId undefined');
-    if (!$itemData['doc_id']) sendError(__FUNCTION__.': docId undefined');
-    if (!$itemData['doc_title']) sendError(__FUNCTION__.': docTitle undefined');
+    if (!$itemData['doc_id']) unset($itemData['doc_id']);
 
     $itemData['title'] = !empty($itemData['title']) ? $itemData['title'] : $itemData['doc_title'];
 
@@ -38,6 +37,7 @@ function itemSaveAction(DocumentParser $modx, DatabaseUtils $db)
 
     } else {
 
+        if (!$itemData['doc_id']) $itemData['doc_id'] = null;
         if (!$modx->db->update($itemData, $tableName, "id = {$itemData['id']}")) {
             sendError(__FUNCTION__.': menu item is not saved');
         }

@@ -5,8 +5,7 @@
  */
 
 import './styles/index.scss';
-import './polyfill';
-import Vue from 'assets/modules/CustomMenu/vue';
+import Vue from 'vue';
 import Http, { url } from './http';
 import { store, Store } from './store';
 import MenuList from './components/MenuList';

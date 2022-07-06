@@ -5,155 +5,173 @@
  * delphinpro <delphinpro@yandex.ru>
  */
 
-/**
- * @var \DocumentParser $modx
- */
-
 if (empty($modx) || !($modx instanceof DocumentParser)) {
     die('Please use the MODX Content Manager instead of accessing this file directly.');
 }
 
-/**
- *
- */
-function pre()
+function init_cm_database($modx)
 {
-    $args = func_get_args();
-    foreach ($args as $arg) {
-        echo '<pre>';
-        print_r($arg);
-        echo '</pre>';
-    }
+    $dbUtils = new DatabaseUtils($modx);
+    $dbUtils->addTableDefinition('menus', [
+        'fields'  => [
+            'id'    => [
+                'type'   => 'INT',
+                'length' => 11,
+                'isNull' => false,
+                'attrs'  => 'AUTO_INCREMENT',
+            ],
+            'name'  => [
+                'type'    => 'VARCHAR',
+                'length'  => 45,
+                'isNull'  => true,
+                'default' => null,
+            ],
+            'title' => [
+                'type'    => 'VARCHAR',
+                'length'  => 45,
+                'isNull'  => false,
+                'default' => '',
+            ],
+        ],
+        'primary' => 'id',
+        'indexes' => [
+            'name' => ['type' => 'UNIQUE INDEX', 'field' => 'name'],
+        ],
+        'params'  => [
+            'COLLATE'        => "'utf8_general_ci'",
+            'ENGINE'         => 'MyISAM',
+            'AUTO_INCREMENT' => 1,
+        ],
+    ]);
+    $dbUtils->addTableDefinition('menu_items', [
+        'fields'  => [
+            'id'          => [
+                'type'   => 'INT',
+                'length' => 11,
+                'isNull' => false,
+                'attrs'  => 'AUTO_INCREMENT',
+            ],
+            'parent_id'   => [
+                'type'    => 'INT',
+                'length'  => 11,
+                'isNull'  => true,
+                'default' => null,
+            ],
+            'menu_id'     => [
+                'type'   => 'INT',
+                'length' => 11,
+                'isNull' => false,
+            ],
+            'order_index' => [
+                'type'    => 'INT',
+                'length'  => 5,
+                'isNull'  => false,
+                'default' => 0,
+            ],
+            'is_hide'     => [
+                'type'    => 'INT',
+                'length'  => 1,
+                'isNull'  => false,
+                'default' => 0,
+            ],
+            'replaced'    => [
+                'type'    => 'INT',
+                'length'  => 1,
+                'isNull'  => false,
+                'default' => 0,
+            ],
+            'doc_id'      => [
+                'type'    => 'INT',
+                'length'  => 11,
+                'isNull'  => true,
+                'default' => null,
+            ],
+            'doc_title'   => [
+                'type'    => 'VARCHAR',
+                'length'  => 255,
+                'isNull'  => true,
+                'default' => null,
+            ],
+            'title'       => [
+                'type'    => 'VARCHAR',
+                'length'  => 255,
+                'isNull'  => true,
+                'default' => null,
+            ],
+            'url'         => [
+                'type'    => 'VARCHAR',
+                'length'  => 255,
+                'isNull'  => true,
+                'default' => '',
+            ],
+            'alias'       => [
+                'type'    => 'VARCHAR',
+                'length'  => 255,
+                'isNull'  => true,
+                'default' => null,
+            ],
+        ],
+        'primary' => 'id',
+        'indexes' => [],
+        'params'  => [
+            'COLLATE'        => "'utf8_general_ci'",
+            'ENGINE'         => 'MyISAM',
+            'AUTO_INCREMENT' => 1,
+        ],
+    ]);
+    return $dbUtils;
 }
 
-/**
- *
- */
-function vd()
+/*==
+ *== Snippet
+ *== ======================================= ==*/
+
+function cmError($msg)
 {
-    $args = func_get_args();
-    foreach ($args as $arg) {
-        echo '<pre>';
-        var_dump($arg);
-        echo '</pre>';
-    }
+    $snippetName = 'Snippet CustomMenu';
+    return '<i style="color:red">'.$snippetName.': '.$msg.'</i>';
 }
 
-/**
- * @param $dir
- * @return array
- */
-function getAllowedActions($dir)
-{
-    $allowedActions = [];
-    $actionFiles = scandir($dir);
-    foreach ($actionFiles as $actionFile) {
-        $info = pathinfo($actionFile);
-        if ($info['extension'] === 'php') {
-            $allowedActions[] = $info['filename'];
-        }
-    }
-    return $allowedActions;
-}
-
-function sendResponse($payload = null, $message = null)
-{
-    echo json_encode([
-        'status'  => true,
-        'message' => $message,
-        'payload' => $payload,
-        '$_POST'  => $_POST,
-        '$_GET'   => $_GET,
-    ], JSON_UNESCAPED_UNICODE);
-    die;
-}
-
-function sendError($message = 'Unknown error')
-{
-    echo json_encode([
-        'status'  => false,
-        'message' => $message,
-        'payload' => null,
-        '$_POST'  => $_POST,
-        '$_GET'   => $_GET,
-    ], JSON_UNESCAPED_UNICODE);
-    die;
-}
-
-function getIntParam($name, $default = null)
-{
-    if (!array_key_exists($name, $_POST)) return $default;
-
-    if ($_POST[$name] === null) return null;
-    $value = trim($_POST[$name]);
-
-    if ($value === '') return null;
-    if (strtolower($value) === 'null') return null;
-
-    return (int)$_POST[$name];
-}
-
-function getStringParam($name, $default = null)
-{
-    if (!array_key_exists($name, $_POST)) return $default;
-
-    if ($_POST[$name] === null) return null;
-    $value = trim($_POST[$name]);
-
-    if (strtolower($value) === 'null') return null;
-
-    return $value;
-}
-
-function rev($filename, $path = 'assets/modules/CustomMenu/')
+function renderItems($rootNode, $allTpl, $depth = 0)
 {
     global $modx;
-    $_filename = $modx->config['base_path'].$path.$filename;
-    $md5 = md5_file($_filename);
-    $v = substr($md5, 0, 7);
-    return $modx->config['base_url'].$path.$filename.'?rev='.$v;
-}
+    $html = '';
 
-/**
- * from https://stackoverflow.com/questions/1993721/how-to-convert-camelcase-to-camel-case
- * @param $input
- * @return string
- */
-function camelCase2Shake($input)
-{
-    preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
-    $ret = $matches[0];
-    foreach ($ret as &$match) {
-        $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
-    }
-    return implode('_', $ret);
-}
+    $tplItem = $depth < 1 ? $allTpl['Item'] : $allTpl['ItemInner'];
+    $tplWrap = $depth < 0 ? $allTpl['Wrap'] : $allTpl['WrapInner'];
 
-function shake2CamelCase($input)
-{
-    $words = explode('_', $input);
-    $first = array_shift($words);
-    $words = array_map(function ($word) {
-        return ucfirst($word);
-    }, $words);
+    foreach ($rootNode as $item) {
 
-    return $first.implode('', $words);
-}
+        //$item['wrap'] = '';
+        // Замещаемый пункт. Нужно дернуть дочерние ресурсы.
+        // В этой версии работаем только в первым уровнем вложенности.
+        if ($item['replaced']) {
+            $item['title'] .= ' =='.$item['docId'];
 
-function buildTree(array $items, $parent = 0, $idKey = 'id', $parentIdKey = 'parent_id', $childrenKey = 'children')
-{
-    $tree = [];
-    foreach ($items as $item) {
-        if ($item[$parentIdKey] === $parent) {
-            $children = buildTree($items, $item[$idKey], $idKey, $parentIdKey, $childrenKey);
-            if ($children) {
-                $item[$childrenKey] = $children;
-            } else {
-                $item[$childrenKey] = [];
+            $fields = 'id,type,pagetitle,menutitle';
+            $where = '';
+            $sort = 'menuindex';
+            $limit = null;
+            $childrenDocs = $modx->getDocumentChildren($item['docId'], 1, 0, $fields, $where, $sort, 'ASC', $limit);
+            //pre($childrenDocs);
+            foreach ($childrenDocs as $doc) {
+                $doc['title'] = $doc['menutitle'] ? $doc['menutitle'] : $doc['pagetitle'];
+                $doc['url'] = $modx->makeUrl((int)$doc['id']);
+                $html .= DLTemplate::getInstance($modx)->parseChunk($tplItem, $doc);
             }
-            $tree[] = $item;
+
+        } // Обычный пункт. Рендерим.
+        else {
+            // Имеются вложенные пункты
+            if (count($item['children'])) {
+                $children = renderItems($item['children'], $allTpl, $depth + 1);
+                $item['wrap'] = DLTemplate::getInstance($modx)->parseChunk($tplWrap, ['wrap' => $children]);
+                $item['classes'] = 'hasChildren';
+            }
+
+            $html .= DLTemplate::getInstance($modx)->parseChunk($tplItem, $item);
         }
     }
 
-    return $tree;
+    return $html;
 }

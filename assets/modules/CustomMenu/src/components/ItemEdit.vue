@@ -3,11 +3,9 @@
   Copyright (c) 2018-2022
   delphinpro <delphinpro@yandex.ru>
   -->
-
 <script>
 import { Http, url } from '../http';
 import DocSelector from './DocSelector';
-
 
 let timeoutId;
 
@@ -42,10 +40,10 @@ export default {
 
     computed: {
         correctItem() {
+            let hasTitle = (this.item.docTitle && this.item.docTitle.trim())
+                || (this.item.title && this.item.title.trim());
             return this.item.menuId > 0
-                && this.item.docId > 0
-                && this.item.docTitle
-                && this.item.docTitle.trim()
+                && hasTitle
                 ;
         },
         captionForm() {
@@ -85,11 +83,17 @@ export default {
                             this.$defaultError(err);
                         });
                 }, 400);
+            } else {
+                this.item.docId = null;
+                this.item.docTitle = '';
+                this.item.url = '';
+                this.item.alias = '';
             }
         },
 
         itemSave() {
             this.$store.clearErrors();
+            if (!this.item.docId) this.item.docId = null;
             Http(url('itemSave'), this.item).then(res => {
                 this.$emit('itemSave', res.payload.item);
             }).catch(this.$defaultError);
@@ -109,6 +113,22 @@ export default {
             this.item.parentId = 0;
             this.itemSave();
         },
+
+        clearDocId() {
+            this.item.docId = null;
+        },
+    },
+
+    watch: {
+        'item.docId'(v) {
+            console.log(v);
+            if (!v) {
+                this.item.replaced = 0;
+                this.item.docTitle = '';
+                this.item.alias = '';
+                this.item.url = '';
+            }
+        },
     },
 };
 </script>
@@ -119,25 +139,6 @@ export default {
         <div class="form-group">
             <table class="table-params">
                 <tbody>
-                    <tr>
-                        <td><span>Замещаемый элемент</span></td>
-                        <td>
-                            <div class="flex">
-                                <select class="form-control"
-                                    style="max-width: 60px;"
-                                    @change="item.replaced = +$event.target.value"
-                                >
-                                    <option :key="0" :selected="item.replaced===0" :value="0">Нет</option>
-                                    <option :key="1" :selected="item.replaced===1" :value="1">Да</option>
-                                </select>
-                                <span class="form-control-static" style="padding-left: 1rem;">{{ item.replaced }}</span>
-                                <span class="text-muted" style="padding-left: 1rem; line-height:15px">
-                                    Замещаемый элемент непосредственно не отображается в меню.
-                                    Он замещает себя ссылками на дочерние страницы выбранного ресурса.
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
                     <tr>
                         <td><span>Название пункта</span></td>
                         <td><input v-model="item.title" :placeholder="item.docTitle" class="form-control" type="text">
@@ -163,6 +164,7 @@ export default {
                                     type="text"
                                     @input="loadResource"
                                 >
+                                <button class="btn btn-secondary" @click="clearDocId">Очистить</button>
                                 <input :value="item.docTitle" class="form-control" placeholder="" readonly type="text">
                                 <button class="btn btn-secondary" disabled>Выбрать…</button>
                             </div>
@@ -171,6 +173,24 @@ export default {
                     <tr v-if="!item.replaced">
                         <td><span>Ссылка</span></td>
                         <td><input v-model="item.url" class="form-control" placeholder="" type="text"></td>
+                    </tr>
+                    <tr v-if="item.docId && item.docTitle">
+                        <td><span>Замещаемый элемент</span></td>
+                        <td>
+                            <div class="flex">
+                                <select class="form-control"
+                                    style="max-width: 60px;"
+                                    @change="item.replaced = +$event.target.value"
+                                >
+                                    <option :key="0" :selected="item.replaced===0" :value="0">Нет</option>
+                                    <option :key="1" :selected="item.replaced===1" :value="1">Да</option>
+                                </select>
+                                <span class="text-muted" style="padding-left: 1rem; line-height:15px">
+                                    Замещаемый элемент непосредственно не отображается в меню.
+                                    Он замещает себя ссылками на дочерние страницы выбранного ресурса.
+                                </span>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td><span>Скрыть этот пункт</span></td>
@@ -183,21 +203,20 @@ export default {
                                     <option :key="0" :selected="item.isHide===0" :value="0">Нет</option>
                                     <option :key="1" :selected="item.isHide===1" :value="1">Да</option>
                                 </select>
-                                <span class="form-control-static" style="padding-left: 1rem;">{{ item.isHide }}</span>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td><span>MenuID</span></td>
-                        <td><input v-model="item.menuId" class="form-control" placeholder=""
-                            readonly style="width: 60px;" type="text"
-                        ></td>
-                    </tr>
-                    <tr>
-                        <td><span>ItemID</span></td>
-                        <td><input v-model="item.id" class="form-control" placeholder=""
-                            readonly style="width: 60px;" type="text"
-                        ></td>
+                        <td><span>MenuID / ItemID</span></td>
+                        <td>
+                            <input v-model="item.menuId" class="form-control" placeholder=""
+                                readonly style="width: 60px;" type="text"
+                            >
+                            <span class="form-control-static">/</span>
+                            <input v-model="item.id" class="form-control" placeholder=""
+                                readonly style="width: 60px;" type="text"
+                            >
+                        </td>
                     </tr>
                     <tr v-if="!item.replaced">
                         <td><span>Alias</span></td>
@@ -206,9 +225,14 @@ export default {
                 </tbody>
             </table>
         </div>
-        <div class="form-group">
+        <div class="form-group d-flex">
             <div class="btn-group">
-                <button :disabled="!correctItem" class="btn btn-success" @click.prevent="itemSave">Сохранить</button>
+                <button :class="{
+            'btn-success': correctItem,
+            'btn-secondary': !correctItem
+        }" :disabled="!correctItem" class="btn" @click.prevent="itemSave"
+                >Сохранить
+                </button>
                 <button class="btn btn-secondary" @click.prevent="itemCancel">Отмена</button>
             </div>
         </div>

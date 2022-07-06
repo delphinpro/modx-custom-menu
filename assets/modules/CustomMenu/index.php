@@ -17,10 +17,11 @@ if (!$modx->hasPermission('exec_module')) {
     $modx->sendRedirect('index.php?a=106');
 }
 
-define('CUSTOM_MENU_DEBUG', true);
+const CUSTOM_MENU_DEBUG = true;
 
-require_once __DIR__.'/lib.php';
 require_once __DIR__.'/DatabaseUtils.php';
+require_once __DIR__.'/functions.php';
+require_once __DIR__.'/lib.php';
 
 $moduleId = $_GET['id'];
 $managerPath = $modx->getManagerPath();
@@ -28,7 +29,7 @@ $method = strtoupper($_SERVER['REQUEST_METHOD']);
 $isPost = $method !== 'GET';
 
 $modxConfig = $modx->config;
-$dbUtils = initDatabaseUtils($modx);
+$dbUtils = init_cm_database($modx);
 $dbUtils->createTables();
 
 //initDatabaseStruct();
@@ -64,14 +65,14 @@ $jsData = [
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Custom Menu</title>
+    <title>Пользовательские меню</title>
     <style>
         #app:not(.AppMounted) { opacity: 0; }
 
         pre {border: 1px solid #ddd;background: #efefef;padding: 1rem;}
     </style>
     <link rel="stylesheet" href="<?=rev('styles.min.css', 'manager/media/style/default/css/')?>">
-    <link rel="stylesheet" href="<?=rev('dist/index.bundle.css')?>">
+    <link rel="stylesheet" href="<?=rev('dist/index.bundle.css', 'assets/modules/CustomMenu/')?>">
 </head>
 <body>
 
@@ -91,7 +92,7 @@ $jsData = [
 
     <h1>
         <i class="fa fa-list"></i>
-        CustomMenu
+        Пользовательские меню
     </h1>
 
     <component
@@ -108,8 +109,8 @@ $jsData = [
     // noinspection JSAnnotator
     const APP = <?= json_encode($jsData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
 </script>
-<script src="<?=rev('vue.js')?>"></script>
-<script src="<?=rev('dist/index.bundle.js')?>"></script>
+<script src="<?=rev('vue.js', 'assets/modules/CustomMenu/')?>"></script>
+<script src="<?=rev('dist/index.bundle.js', 'assets/modules/CustomMenu/')?>"></script>
 
 </body>
 </html>
