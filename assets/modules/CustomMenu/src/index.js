@@ -1,18 +1,18 @@
-/**
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
 import './styles/index.scss';
 import './polyfill';
-import Vue             from 'assets/modules/CustomMenu/vue';
-import Http, {url}     from './http';
-import {store, Store}  from './store';
-import MenuList        from './components/MenuList';
-import ItemList        from './components/ItemList';
-import TreeNode        from './components/TreeNode';
-import DocSelector     from './components/DocSelector';
+import Vue from 'assets/modules/CustomMenu/vue';
+import Http, { url } from './http';
+import { store, Store } from './store';
+import MenuList from './components/MenuList';
+import ItemList from './components/ItemList';
+import TreeNode from './components/TreeNode';
+import DocSelector from './components/DocSelector';
 import DocSelectorNode from './components/DocSelectorNode';
 
 

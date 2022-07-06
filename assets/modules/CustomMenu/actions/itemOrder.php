@@ -1,18 +1,15 @@
 <?php
-/**
- * Custom Menu
- * Module for EvolutionCMS (Modx)
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
 /**
  * @param DocumentParser $modx
- * @param DatabaseUtils  $db
+ * @param DatabaseUtils $db
  */
-function itemOrderAction(\DocumentParser $modx, \DatabaseUtils $db)
+function itemOrderAction(DocumentParser $modx, DatabaseUtils $db)
 {
     $DIR_UP = 1;
     $DIR_DOWN = 2;
@@ -23,9 +20,9 @@ function itemOrderAction(\DocumentParser $modx, \DatabaseUtils $db)
     $menuId = getIntParam('menuId');
     $dir = getIntParam('dir');
 
-    if (!$itemId) sendError(__FUNCTION__ . ': itemId undefined');
-    if (!$menuId) sendError(__FUNCTION__ . ': menuId undefined');
-    if (!$dir) sendError(__FUNCTION__ . ': direction order undefined');
+    if (!$itemId) sendError(__FUNCTION__.': itemId undefined');
+    if (!$menuId) sendError(__FUNCTION__.': menuId undefined');
+    if (!$dir) sendError(__FUNCTION__.': direction order undefined');
 
     $result = $modx->db->select(
         '*',

@@ -1,26 +1,23 @@
 <?php
-/**
- * Custom Menu
- * Module for EvolutionCMS (Modx)
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
 /**
  * @param DocumentParser $modx
- * @param DatabaseUtils  $db
+ * @param DatabaseUtils $db
  */
-function getResourceAction(\DocumentParser $modx, \DatabaseUtils $db)
+function getResourceAction(DocumentParser $modx, DatabaseUtils $db)
 {
     $docId = getIntParam('docId');
 
-    if (!$docId or $docId < 0) sendError(__FUNCTION__ . ': не передан ID');
+    if (!$docId or $docId < 0) sendError(__FUNCTION__.': не передан ID');
 
     $docInfo = $modx->getDocument($docId);
 
-    if (!$docInfo) sendError(__FUNCTION__ . ': Документ не найден');
+    if (!$docInfo) sendError(__FUNCTION__.': Документ не найден');
 
     sendResponse([
         'resource' => [

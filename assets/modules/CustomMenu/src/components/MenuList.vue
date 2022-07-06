@@ -1,11 +1,12 @@
-<script>/**
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
- */
+<!--
+  Evo Custom Menu
+  Copyright (c) 2018-2022
+  delphinpro <delphinpro@yandex.ru>
+  -->
 
-import MenuEdit    from './MenuEdit';
-import {Http, url} from '../http';
+<script>
+import MenuEdit from './MenuEdit';
+import { Http, url } from '../http';
 
 
 export default {
@@ -25,12 +26,12 @@ export default {
     methods: {
         menuCreate() {
             this.isEditing = true;
-            this.editing   = {id: null, name: null, title: ''};
+            this.editing = { id: null, name: null, title: '' };
         },
 
         menuEdit(menuId, index) {
             console.log('menuEdit', menuId, index);
-            this.editing   = this.$state.menus.slice(index, index + 1)[0];
+            this.editing = this.$state.menus.slice(index, index + 1)[0];
             this.isEditing = true;
         },
 
@@ -57,19 +58,19 @@ export default {
                     }
 
                     this.isEditing = false;
-                    this.editing   = null;
+                    this.editing = null;
                 })
                 .catch(this.$defaultError);
         },
 
         menuCancel() {
             this.isEditing = false;
-            this.editing   = null;
+            this.editing = null;
         },
 
         menuDelete(menuId, index) {
             if (confirm('Меню будет удалено!')) {
-                Http(url('menuDelete'), {id: menuId})
+                Http(url('menuDelete'), { id: menuId })
                     .then(res => {
                         this.$store.delMenuListItem(index);
                     })
@@ -87,19 +88,19 @@ export default {
 
 <template>
     <div class="sectionBody">
-        <div class="dynamic-tab-pane-control tab-pane" id="documentPane">
+        <div id="documentPane" class="dynamic-tab-pane-control tab-pane">
             <div class="tab-row-container">
                 <div class="tab-row">
                     <h2 class="tab selected">
                         <span>Список меню</span>
-                        <small>({{$state.menus.length}})</small>
+                        <small>({{ $state.menus.length }})</small>
                     </h2>
                 </div>
             </div>
             <div class="tab-page">
 
                 <div v-if="!isEditing">
-                    <div class="form-group" v-if="$state.menus.length">
+                    <div v-if="$state.menus.length" class="form-group">
                         <div class="menu-list">
                             <div class="menu-list__row">
                                 <div class="menu-list__cell _head _id">ID</div>
@@ -107,27 +108,27 @@ export default {
                                 <div class="menu-list__cell _head">Название</div>
                                 <div class="menu-list__cell _head"></div>
                             </div>
-                            <div class="menu-list__row"
-                                v-for="(menu, index) in $state.menus" :key="menu.id"
+                            <div v-for="(menu, index) in $state.menus"
+                                :key="menu.id" class="menu-list__row"
                             >
-                                <div class="menu-list__cell _id"><code>{{menu.id}}</code></div>
-                                <div class="menu-list__cell _name">{{menu.name}}</div>
+                                <div class="menu-list__cell _id"><code>{{ menu.id }}</code></div>
+                                <div class="menu-list__cell _name">{{ menu.name }}</div>
                                 <div class="menu-list__cell">
-                                    <button class="btn btn-link"
-                                        :disabled="isEditing"
+                                    <button :disabled="isEditing"
+                                        class="btn btn-link"
                                         @click.prevent="showItems(menu.id, index)"
-                                    >{{menu.title}}
+                                    >{{ menu.title }}
                                     </button>
                                 </div>
                                 <div class="menu-list__cell _actions">
                                     <div class="btn-group">
-                                        <button class="btn btn-secondary btn-sm"
-                                            :disabled="isEditing"
+                                        <button :disabled="isEditing"
+                                            class="btn btn-secondary btn-sm"
                                             @click.prevent="menuEdit(menu.id, index)"
                                         >Изменить
                                         </button>
-                                        <button class="btn btn-outline-danger btn-sm"
-                                            :disabled="isEditing"
+                                        <button :disabled="isEditing"
+                                            class="btn btn-outline-danger btn-sm"
                                             @click.prevent="menuDelete(menu.id, index)"
                                         >Удалить меню
                                         </button>
@@ -136,7 +137,7 @@ export default {
                             </div>
                         </div>
                     </div>
-                    <div class="alert alert-warning" v-else>Меню не создано</div>
+                    <div v-else class="alert alert-warning">Меню не создано</div>
                 </div>
 
                 <p v-if="!isEditing">

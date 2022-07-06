@@ -1,18 +1,11 @@
 <?php
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
+ */
+
 /**
- * Custom Menu
- *
- * Module to build any menu for EvolutionCMS (Modx)
- *
- * @category    module
- * @version     0.0.1
- * @internal    @properties
- * @internal    @modx_category Manager and Admin
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
- *
  * @var \DocumentParser $modx
  */
 
@@ -26,8 +19,8 @@ if (!$modx->hasPermission('exec_module')) {
 
 define('CUSTOM_MENU_DEBUG', true);
 
-require_once __DIR__ . '/lib.php';
-require_once __DIR__ . '/DatabaseUtils.php';
+require_once __DIR__.'/lib.php';
+require_once __DIR__.'/DatabaseUtils.php';
 
 $moduleId = $_GET['id'];
 $managerPath = $modx->getManagerPath();
@@ -45,25 +38,25 @@ if ($isPost) {
         if (strtolower($param) === 'null') $param = null;
     }
 
-    $allowedActions = getAllowedActions(__DIR__ . '/actions/');
+    $allowedActions = getAllowedActions(__DIR__.'/actions/');
 
     if (isset($_GET['action']) && in_array($_GET['action'], $allowedActions, true)) {
         /** @noinspection PhpIncludeInspection */
-        include __DIR__ . '/actions/' . $_GET['action'] . '.php';
-        $actionFunctionName = $_GET['action'] . 'Action';
+        include __DIR__.'/actions/'.$_GET['action'].'.php';
+        $actionFunctionName = $_GET['action'].'Action';
         if (function_exists($actionFunctionName)) {
             call_user_func_array($actionFunctionName, [$modx, $dbUtils]);
         } else {
-            sendError('Invalid action\' function: ' . $actionFunctionName . '()');
+            sendError('Invalid action\' function: '.$actionFunctionName.'()');
         }
     } else {
-        sendError('Invalid action: ' . $_GET['action']);
+        sendError('Invalid action: '.$_GET['action']);
     }
     sendError('END');
 }
 
 $jsData = [
-    'moduleUrl' => $managerPath . '?a=112&id=' . $moduleId,
+    'moduleUrl' => $managerPath.'?a=112&id='.$moduleId,
 ];
 
 ?>
@@ -77,8 +70,8 @@ $jsData = [
 
         pre {border: 1px solid #ddd;background: #efefef;padding: 1rem;}
     </style>
-    <link rel="stylesheet" href="<?= rev('styles.min.css', 'manager/media/style/default/css/') ?>">
-    <link rel="stylesheet" href="<?= rev('dist/index.bundle.css') ?>">
+    <link rel="stylesheet" href="<?=rev('styles.min.css', 'manager/media/style/default/css/')?>">
+    <link rel="stylesheet" href="<?=rev('dist/index.bundle.css')?>">
 </head>
 <body>
 
@@ -115,8 +108,8 @@ $jsData = [
     // noinspection JSAnnotator
     const APP = <?= json_encode($jsData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
 </script>
-<script src="<?= rev('vue.js') ?>"></script>
-<script src="<?= rev('dist/index.bundle.js') ?>"></script>
+<script src="<?=rev('vue.js')?>"></script>
+<script src="<?=rev('dist/index.bundle.js')?>"></script>
 
 </body>
 </html>

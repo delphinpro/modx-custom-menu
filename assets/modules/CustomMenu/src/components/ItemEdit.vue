@@ -1,11 +1,11 @@
-<script>/**
- * kb-egida.doseo
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
- */
+<!--
+  Evo Custom Menu
+  Copyright (c) 2018-2022
+  delphinpro <delphinpro@yandex.ru>
+  -->
 
-import {Http, url} from '../http';
+<script>
+import { Http, url } from '../http';
 import DocSelector from './DocSelector';
 
 
@@ -17,9 +17,9 @@ export default {
     },
 
     props: {
-        menu     : {type: Object, default: null},
-        menuItem : {type: Object, default: null},
-        menuItems: {type: Array, default: null},
+        menu     : { type: Object, default: null },
+        menuItem : { type: Object, default: null },
+        menuItems: { type: Array, default: null },
     },
 
     data: () => ({
@@ -61,7 +61,7 @@ export default {
         if (this.menuItem === null) {
             this.item.menuId = this.menu.id;
         } else {
-            this.item = {...this.menuItem};
+            this.item = { ...this.menuItem };
         }
     },
 
@@ -71,17 +71,17 @@ export default {
                 clearTimeout(timeoutId);
                 timeoutId = setTimeout(() => {
                     this.$store.clearErrors();
-                    Http(url('getResource'), {docId: this.item.docId})
+                    Http(url('getResource'), { docId: this.item.docId })
                         .then(res => {
                             // this.editedItem.docId = res.payload.resource.id;
                             this.item.docTitle = res.payload.resource.docTitle;
-                            this.item.url      = res.payload.resource.url;
-                            this.item.alias    = res.payload.resource.alias;
+                            this.item.url = res.payload.resource.url;
+                            this.item.alias = res.payload.resource.alias;
                         })
                         .catch(err => {
                             this.item.docTitle = null;
-                            this.item.url      = null;
-                            this.item.alias    = null;
+                            this.item.url = null;
+                            this.item.alias = null;
                             this.$defaultError(err);
                         });
                 }, 400);
@@ -108,14 +108,14 @@ export default {
         resetParent() {
             this.item.parentId = 0;
             this.itemSave();
-        }
+        },
     },
 };
 </script>
 
 <template>
     <fieldset>
-        <legend>{{captionForm}}</legend>
+        <legend>{{ captionForm }}</legend>
         <div class="form-group">
             <table class="table-params">
                 <tbody>
@@ -125,11 +125,12 @@ export default {
                             <div class="flex">
                                 <select class="form-control"
                                     style="max-width: 60px;"
-                                    @change="item.replaced = +$event.target.value">
-                                    <option :value="0" :selected="item.replaced===0" :key="0">Нет</option>
-                                    <option :value="1" :selected="item.replaced===1" :key="1">Да</option>
+                                    @change="item.replaced = +$event.target.value"
+                                >
+                                    <option :key="0" :selected="item.replaced===0" :value="0">Нет</option>
+                                    <option :key="1" :selected="item.replaced===1" :value="1">Да</option>
                                 </select>
-                                <span class="form-control-static" style="padding-left: 1rem;">{{item.replaced}}</span>
+                                <span class="form-control-static" style="padding-left: 1rem;">{{ item.replaced }}</span>
                                 <span class="text-muted" style="padding-left: 1rem; line-height:15px">
                                     Замещаемый элемент непосредственно не отображается в меню.
                                     Он замещает себя ссылками на дочерние страницы выбранного ресурса.
@@ -139,7 +140,7 @@ export default {
                     </tr>
                     <tr>
                         <td><span>Название пункта</span></td>
-                        <td><input class="form-control" type="text" v-model="item.title" :placeholder="item.docTitle">
+                        <td><input v-model="item.title" :placeholder="item.docTitle" class="form-control" type="text">
                         </td>
                     </tr>
                     <tr>
@@ -148,7 +149,7 @@ export default {
                             <div class="flex">
                                 <button class="btn btn-secondary" @click="parentSelectorShow=true">Выбрать…</button>
                                 <button class="btn btn-secondary" @click="resetParent">Сбросить</button>
-                                <input class="form-control" type="text" v-model="item.parentId" readonly>
+                                <input v-model="item.parentId" class="form-control" readonly type="text">
                             </div>
                         </td>
                     </tr>
@@ -156,19 +157,20 @@ export default {
                         <td><span>Ресурс</span></td>
                         <td>
                             <div class="flex">
-                                <input class="form-control" type="text"
-                                    style="width: 60px; text-align:center;"
+                                <input v-model.number="item.docId" class="form-control"
                                     placeholder="[~id~]"
-                                    v-model.number="item.docId"
-                                    @input="loadResource">
-                                <input class="form-control" type="text" readonly :value="item.docTitle" placeholder="">
+                                    style="width: 60px; text-align:center;"
+                                    type="text"
+                                    @input="loadResource"
+                                >
+                                <input :value="item.docTitle" class="form-control" placeholder="" readonly type="text">
                                 <button class="btn btn-secondary" disabled>Выбрать…</button>
                             </div>
                         </td>
                     </tr>
                     <tr v-if="!item.replaced">
                         <td><span>Ссылка</span></td>
-                        <td><input class="form-control" type="text" v-model="item.url" placeholder=""></td>
+                        <td><input v-model="item.url" class="form-control" placeholder="" type="text"></td>
                     </tr>
                     <tr>
                         <td><span>Скрыть этот пункт</span></td>
@@ -176,46 +178,48 @@ export default {
                             <div class="flex">
                                 <select class="form-control"
                                     style="max-width: 60px;"
-                                    @change="item.isHide = +$event.target.value">
-                                    <option :value="0" :selected="item.isHide===0" :key="0">Нет</option>
-                                    <option :value="1" :selected="item.isHide===1" :key="1">Да</option>
+                                    @change="item.isHide = +$event.target.value"
+                                >
+                                    <option :key="0" :selected="item.isHide===0" :value="0">Нет</option>
+                                    <option :key="1" :selected="item.isHide===1" :value="1">Да</option>
                                 </select>
-                                <span class="form-control-static" style="padding-left: 1rem;">{{item.isHide}}</span>
+                                <span class="form-control-static" style="padding-left: 1rem;">{{ item.isHide }}</span>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td><span>MenuID</span></td>
-                        <td><input class="form-control" type="text" style="width: 60px;"
-                            v-model="item.menuId" readonly placeholder=""></td>
+                        <td><input v-model="item.menuId" class="form-control" placeholder=""
+                            readonly style="width: 60px;" type="text"
+                        ></td>
                     </tr>
                     <tr>
                         <td><span>ItemID</span></td>
-                        <td><input class="form-control" type="text" style="width: 60px;"
-                            v-model="item.id" readonly placeholder=""
+                        <td><input v-model="item.id" class="form-control" placeholder=""
+                            readonly style="width: 60px;" type="text"
                         ></td>
                     </tr>
                     <tr v-if="!item.replaced">
                         <td><span>Alias</span></td>
-                        <td><input class="form-control" type="text" v-model="item.alias" readonly placeholder=""></td>
+                        <td><input v-model="item.alias" class="form-control" placeholder="" readonly type="text"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="form-group">
             <div class="btn-group">
-                <button class="btn btn-success" @click.prevent="itemSave" :disabled="!correctItem">Сохранить</button>
+                <button :disabled="!correctItem" class="btn btn-success" @click.prevent="itemSave">Сохранить</button>
                 <button class="btn btn-secondary" @click.prevent="itemCancel">Отмена</button>
             </div>
         </div>
         <DocSelector
             v-if="parentSelectorShow"
-            width="700px"
-            title="Выберите родительский пункт для редактируемого"
-            :tree="menuItems"
             :current-node="item"
-            @picked="onPicked"
+            :tree="menuItems"
+            title="Выберите родительский пункт для редактируемого"
+            width="700px"
             @close="parentSelectorShow=false"
+            @picked="onPicked"
         ></DocSelector>
     </fieldset>
 </template>

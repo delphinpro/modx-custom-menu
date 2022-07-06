@@ -1,15 +1,15 @@
-<script>/**
- * delphinpro.mysite
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
- */
+<!--
+  Evo Custom Menu
+  Copyright (c) 2018-2022
+  delphinpro <delphinpro@yandex.ru>
+  -->
 
+<script>
 export default {
     props: {
-        node       : {type: Object},
-        indent     : {type: Number, default: 0},
-        currentNode: {type: Object, default: null},
+        node       : { type: Object },
+        indent     : { type: Number, default: 0 },
+        currentNode: { type: Object, default: null },
     },
 
     data: () => ({}),
@@ -55,19 +55,19 @@ export default {
 
 <template>
     <div>
-        <a class="node" :class="nodeClasses">
+        <a :class="nodeClasses" class="node">
             <span class="indent"><i v-for="i in indentArr"></i></span>
-            <span class="icon"><i class="fa" :class="iconClass"></i></span>
+            <span class="icon"><i :class="iconClass" class="fa"></i></span>
             <span class="title" @click.prevent="!disabledNode && $emit('picked', node)">
-                <span v-if="node.replaced">{{node.docTitle}}</span>
-                <span v-else>{{node.title}}</span>
+                <span v-if="node.replaced">{{ node.docTitle }}</span>
+                <span v-else>{{ node.title }}</span>
             </span>
         </a>
         <div v-if="node.children.length">
             <DocSelectorNode v-for="(item, index) in node.children" :key="item.id"
-                :node="item"
-                :indent="indent + 1"
                 :current-node="currentNode"
+                :indent="indent + 1"
+                :node="item"
                 @picked="$emit('picked', $event)"
             ></DocSelectorNode>
         </div>

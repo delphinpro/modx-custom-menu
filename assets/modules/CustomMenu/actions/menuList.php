@@ -1,18 +1,15 @@
 <?php
-/**
- * Custom Menu
- * Module for EvolutionCMS (Modx)
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
 /**
  * @param DocumentParser $modx
- * @param DatabaseUtils  $db
+ * @param DatabaseUtils $db
  */
-function menuListAction(\DocumentParser $modx, \DatabaseUtils $db)
+function menuListAction(DocumentParser $modx, DatabaseUtils $db)
 {
     $result = $modx->db->select('*', $db->getTableName('menus'));
     $menuList = [];

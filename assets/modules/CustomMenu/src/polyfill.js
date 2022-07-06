@@ -1,19 +1,19 @@
-/**
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
 if (!Array.prototype.findIndex) {
-    Array.prototype.findIndex = function(predicate) {
+    Array.prototype.findIndex = function (predicate) {
         if (this == null) {
             throw new TypeError('Array.prototype.findIndex called on null or undefined');
         }
         if (typeof predicate !== 'function') {
             throw new TypeError('predicate must be a function');
         }
-        var list    = Object(this);
-        var length  = list.length >>> 0;
+        var list = Object(this);
+        var length = list.length >>> 0;
         var thisArg = arguments[1];
         var value;
 

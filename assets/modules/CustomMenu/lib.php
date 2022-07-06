@@ -1,12 +1,11 @@
 <?php
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
+ */
+
 /**
- * Custom Menu
- * Module for EvolutionCMS (Modx)
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
- *
  * @var \DocumentParser $modx
  */
 
@@ -109,10 +108,10 @@ function getStringParam($name, $default = null)
 function rev($filename, $path = 'assets/modules/CustomMenu/')
 {
     global $modx;
-    $_filename = $modx->config['base_path'] . $path . $filename;
+    $_filename = $modx->config['base_path'].$path.$filename;
     $md5 = md5_file($_filename);
     $v = substr($md5, 0, 7);
-    return $modx->config['base_url'] . $path . $filename . '?rev=' . $v;
+    return $modx->config['base_url'].$path.$filename.'?rev='.$v;
 }
 
 /**
@@ -138,7 +137,7 @@ function shake2CamelCase($input)
         return ucfirst($word);
     }, $words);
 
-    return $first . implode('', $words);
+    return $first.implode('', $words);
 }
 
 function buildTree(array $items, $parent = 0, $idKey = 'id', $parentIdKey = 'parent_id', $childrenKey = 'children')

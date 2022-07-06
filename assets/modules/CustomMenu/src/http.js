@@ -1,15 +1,15 @@
-/**
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
-const ajaxUrl    = APP.moduleUrl + '&action=';
+const ajaxUrl = APP.moduleUrl + '&action=';
 export const url = actionName => ajaxUrl + actionName;
 
 const defaultConfig = {
     credentials: 'same-origin',
-    headers    : {'X-Requested-With': 'XMLHttpRequest'},
+    headers    : { 'X-Requested-With': 'XMLHttpRequest' },
     method     : 'POST',
     body       : null,
 };
@@ -26,7 +26,7 @@ function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return response;
     } else {
-        let error      = new Error(response.statusText);
+        let error = new Error(response.statusText);
         error.response = response;
         throw error;
     }
@@ -37,7 +37,7 @@ function parseJSON(response) {
 }
 
 export function Http(url, fd, options) {
-    fd      = fd || null;
+    fd = fd || null;
     options = options || defaultConfig;
 
     if (fd !== null) {
@@ -80,7 +80,7 @@ export function Http(url, fd, options) {
                 return response;
             }
 
-            let error      = new Error(response.message || 'Server response isn\'t OK');
+            let error = new Error(response.message || 'Server response isn\'t OK');
             error.response = response;
 
             throw error;
@@ -88,14 +88,3 @@ export function Http(url, fd, options) {
 }
 
 export default Http;
-
-// request.setDefaults = function(param, value = null) {
-//     if (typeof param === 'object') {
-//         for (let key in param) {
-//             if (!param.hasOwnProperty(key)) continue;
-//             setDefaultOption(key, param[key]);
-//         }
-//     } else {
-//         setDefaultOption(param, value);
-//     }
-// };

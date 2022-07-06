@@ -1,25 +1,23 @@
 <?php
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
+ */
+
 /**
- * Custom Menu
- * Snippet for EvolutionCMS (Modx)
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
- *
  * @var DocumentParser $modx
  */
 
-
 /** @noinspection PhpIncludeInspection */
-include_once MODX_BASE_PATH . 'assets/snippets/DocLister/lib/DLTemplate.class.php';
-include_once __DIR__ . '/lib.php';
-include_once __DIR__ . '/DatabaseUtils.php';
+include_once MODX_BASE_PATH.'assets/snippets/DocLister/lib/DLTemplate.class.php';
+include_once __DIR__.'/lib.php';
+include_once __DIR__.'/DatabaseUtils.php';
 
 function cmError($msg)
 {
     $snippetName = 'Snippet CustomMenu';
-    return '<i style="color:red">' . $snippetName . ': ' . $msg . '</i>';
+    return '<i style="color:red">'.$snippetName.': '.$msg.'</i>';
 }
 
 
@@ -48,7 +46,7 @@ function renderItems($rootNode, $tplWrap, $tplItem)
         // Замещаемый пункт. Нужно дернуть дочерние ресурсы.
         // В этой версии работаем только в первым уровнем вложенности.
         if ($item['replaced']) {
-            $item['title'] .= ' ==' . $item['docId'];
+            $item['title'] .= ' =='.$item['docId'];
 
             $fields = 'id,type,pagetitle,menutitle';
             $where = '';
@@ -59,7 +57,7 @@ function renderItems($rootNode, $tplWrap, $tplItem)
             foreach ($childrenDocs as $doc) {
                 $doc['title'] = $doc['menutitle'] ? $doc['menutitle'] : $doc['pagetitle'];
                 $doc['url'] = $modx->makeUrl((int)$doc['id']);
-                $html .= \DLTemplate::getInstance($modx)->parseChunk($tplItem, $doc);
+                $html .= DLTemplate::getInstance($modx)->parseChunk($tplItem, $doc);
             }
 
         } // Обычный пункт. Рендерим.
@@ -67,10 +65,10 @@ function renderItems($rootNode, $tplWrap, $tplItem)
             // Имеются вложенные пункты
             if (count($item['children'])) {
                 $children = renderItems($item['children'], $tplWrap, $tplItem);
-                $item['wrap'] = \DLTemplate::getInstance($modx)->parseChunk($tplWrap, ['wrap' => $children]);
+                $item['wrap'] = DLTemplate::getInstance($modx)->parseChunk($tplWrap, ['wrap' => $children]);
             }
 
-            $html .= \DLTemplate::getInstance($modx)->parseChunk($tplItem, $item);
+            $html .= DLTemplate::getInstance($modx)->parseChunk($tplItem, $item);
         }
     }
 
@@ -120,4 +118,4 @@ if ($json) {
 
 $htmlItems .= renderItems($tree, $tplWrap, $tplItem);
 
-return \DLTemplate::getInstance($modx)->parseChunk($tplWrap, ['wrap' => $htmlItems]);
+return DLTemplate::getInstance($modx)->parseChunk($tplWrap, ['wrap' => $htmlItems]);

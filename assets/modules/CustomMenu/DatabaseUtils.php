@@ -1,12 +1,8 @@
 <?php
-/**
- * Custom Menu
- * Module for EvolutionCMS (Modx)
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
- *
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
 if (empty($modx) || !($modx instanceof DocumentParser)) {
@@ -22,7 +18,7 @@ class DatabaseUtils
 
     private $modx = null;
 
-    public function __construct(\DocumentParser $modx)
+    public function __construct(DocumentParser $modx)
     {
         $this->modx = $modx;
     }
@@ -36,16 +32,49 @@ class DatabaseUtils
         $this->tables[$tableName]['def'] = $def;
     }
 
-    public function createTables()
+    private function getCreateCode($fullTableName, $def)
     {
-        foreach ($this->tables as $table) {
-            $this->modx->db->query($table['createCode']);
+        $sql = "\nCREATE"." TABLE IF NOT EXISTS {$fullTableName} (";
+
+        $fields = [];
+
+        foreach ($def['fields'] as $fieldName => $field) {
+            $str = "\n\t`{$fieldName}` {$field['type']}";
+            if (array_key_exists('length', $field)) $str .= "({$field['length']})";
+            $str .= ($field['isNull'] ? " NULL" : " NOT NULL");
+            if (array_key_exists('attrs', $field)) $str .= " {$field['attrs']}";
+            if (array_key_exists('default',
+                $field)) {
+                $str .= " DEFAULT ".self::getDefaultPresentValue($field['default']);
+            }
+
+            $fields[] = $str;
         }
+
+        $fields[] = "\n\tPRIMARY KEY (`{$def['primary']}`)";
+
+        foreach ($def['indexes'] as $indexName => $index) {
+            $fields[] = "\n\t{$index['type']} `{$indexName}` (`{$index['field']}`)";
+        }
+
+        $sql .= join(',', $fields);
+        $sql .= "\n)";
+
+        foreach ($def['params'] as $param => $value) {
+            $sql .= "\n{$param}={$value}";
+        }
+
+        $sql .= ";";
+
+        return $sql;
     }
 
-    public function getTableName($tableName)
+    private static function getDefaultPresentValue($val)
     {
-        return $this->tables[$tableName]['fullName'];
+        if (is_null($val)) return 'NULL';
+        if (is_string($val) && empty($val)) return '\'\'';
+        if (is_int($val)) return "'".$val."'";
+        return (string)$val;
     }
 
     public function castTypes($tableName, array $data, $keysToCamelCase = false)
@@ -78,14 +107,16 @@ class DatabaseUtils
         return $result;
     }
 
-    public function keysConvertToShake(array $array)
+    public function createTables()
     {
-        $result = [];
-        foreach ($array as $key => $item) {
-            $convertedKey = camelCase2Shake($key);
-            $result[$convertedKey] = $item;
+        foreach ($this->tables as $table) {
+            $this->modx->db->query($table['createCode']);
         }
-        return $result;
+    }
+
+    public function getTableName($tableName)
+    {
+        return $this->tables[$tableName]['fullName'];
     }
 
     public function keysConvertToCamelCase(array $array)
@@ -98,46 +129,14 @@ class DatabaseUtils
         return $result;
     }
 
-    private function getCreateCode($fullTableName, $def)
+    public function keysConvertToShake(array $array)
     {
-        $sql = "\nCREATE" . " TABLE IF NOT EXISTS {$fullTableName} (";
-
-        $fields = [];
-
-        foreach ($def['fields'] as $fieldName => $field) {
-            $str = "\n\t`{$fieldName}` {$field['type']}";
-            if (array_key_exists('length', $field)) $str .= "({$field['length']})";
-            $str .= ($field['isNull'] ? " NULL" : " NOT NULL");
-            if (array_key_exists('attrs', $field)) $str .= " {$field['attrs']}";
-            if (array_key_exists('default', $field)) $str .= " DEFAULT " . self::getDefaultPresentValue($field['default']);
-
-            $fields[] = $str;
+        $result = [];
+        foreach ($array as $key => $item) {
+            $convertedKey = camelCase2Shake($key);
+            $result[$convertedKey] = $item;
         }
-
-        $fields[] = "\n\tPRIMARY KEY (`{$def['primary']}`)";
-
-        foreach ($def['indexes'] as $indexName => $index) {
-            $fields[] = "\n\t{$index['type']} `{$indexName}` (`{$index['field']}`)";
-        }
-
-        $sql .= join(',', $fields);
-        $sql .= "\n)";
-
-        foreach ($def['params'] as $param => $value) {
-            $sql .= "\n{$param}={$value}";
-        }
-
-        $sql .= ";";
-
-        return $sql;
-    }
-
-    private static function getDefaultPresentValue($val)
-    {
-        if (is_null($val)) return 'NULL';
-        if (is_string($val) && empty($val)) return '\'\'';
-        if (is_int($val)) return "'" . $val . "'";
-        return (string)$val;
+        return $result;
     }
 }
 
@@ -145,7 +144,7 @@ class DatabaseUtils
  * @param DocumentParser $modx
  * @return DatabaseUtils
  */
-function initDatabaseUtils(\DocumentParser $modx)
+function initDatabaseUtils(DocumentParser $modx)
 {
     $dbUtils = new DatabaseUtils($modx);
 

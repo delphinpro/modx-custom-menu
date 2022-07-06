@@ -1,7 +1,7 @@
-/**
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
 let timerId;
@@ -50,7 +50,7 @@ export const store = {
     },
 
     getMenu(menuId) {
-        let idx  = this.state.menus.findIndex(m => m.id === menuId);
+        let idx = this.state.menus.findIndex(m => m.id === menuId);
         let menu = this.state.menus.slice(idx, idx + 1);
         if (menu.length) return menu[0];
         return null;

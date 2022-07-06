@@ -1,22 +1,19 @@
 <?php
-/**
- * Custom Menu
- * Module for EvolutionCMS (Modx)
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2018 delphinpro
- * @license     licensed under the MIT license
+/*
+ * Evo Custom Menu
+ * Copyright (c) 2018-2022
+ * delphinpro <delphinpro@yandex.ru>
  */
 
 /**
  * @param DocumentParser $modx
- * @param DatabaseUtils  $db
+ * @param DatabaseUtils $db
  */
-function itemListAction(\DocumentParser $modx, \DatabaseUtils $db)
+function itemListAction(DocumentParser $modx, DatabaseUtils $db)
 {
     $tableName = $db->getTableName('menu_items');
     $menuId = getIntParam('menuId');
-    if (!$menuId) sendError(__FUNCTION__ . ': menuId undefined');
+    if (!$menuId) sendError(__FUNCTION__.': menuId undefined');
 
     $result = $modx->db->select(
         '*',
@@ -25,7 +22,7 @@ function itemListAction(\DocumentParser $modx, \DatabaseUtils $db)
         '`order_index`, `id` ASC'
     );
 
-    if (!$result) sendError(__FUNCTION__ . ': ' . $modx->db->getLastError());
+    if (!$result) sendError(__FUNCTION__.': '.$modx->db->getLastError());
 
     $itemList = [];
 
