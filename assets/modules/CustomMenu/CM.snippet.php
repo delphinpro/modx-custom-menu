@@ -8,7 +8,8 @@
 
 /** @noinspection PhpIncludeInspection */
 include_once MODX_BASE_PATH.'assets/snippets/DocLister/lib/DLTemplate.class.php';
-include_once __DIR__.'/../mod_utils/DatabaseUtils.php';
+include_once __DIR__.'/DatabaseUtils.php';
+include_once __DIR__.'/functions.php';
 include_once __DIR__.'/lib.php';
 
 $menuId = isset($menuId) ? abs((int)$menuId) : null;

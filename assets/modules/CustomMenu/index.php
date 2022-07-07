@@ -107,7 +107,7 @@ $jsData = [
 ?>
 <script>
     // noinspection JSAnnotator
-    const APP = <?= json_encode($jsData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+    window.APP = <?= json_encode($jsData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
 </script>
 <script src="<?=rev('vue.js', 'assets/modules/CustomMenu/')?>"></script>
 <script src="<?=rev('dist/index.bundle.js', 'assets/modules/CustomMenu/')?>"></script>

@@ -7,7 +7,7 @@
 
 /**
  * @param DocumentParser $modx
- * @param DatabaseUtils $db
+ * @param DatabaseUtils  $db
  */
 function itemOrderAction(DocumentParser $modx, DatabaseUtils $db)
 {
@@ -20,14 +20,16 @@ function itemOrderAction(DocumentParser $modx, DatabaseUtils $db)
     $menuId = getIntParam('menuId');
     $dir = getIntParam('dir');
 
-    if (!$itemId) sendError(__FUNCTION__.': itemId undefined');
-    if (!$menuId) sendError(__FUNCTION__.': menuId undefined');
-    if (!$dir) sendError(__FUNCTION__.': direction order undefined');
+    if (!$itemId) sendError(__FUNCTION__ . ': itemId undefined');
+    if (!$menuId) sendError(__FUNCTION__ . ': menuId undefined');
+    if (!$dir) sendError(__FUNCTION__ . ': direction order undefined');
+
+    $parentIdWhereCondition = is_null($parentId) ? "`parent_id` IS NULL" : "`parent_id`={$parentId}";
 
     $result = $modx->db->select(
         '*',
         $tableName,
-        "`menu_id`={$menuId} AND `parent_id`={$parentId}",
+        "`menu_id`={$menuId} AND {$parentIdWhereCondition}",
         "`order_index`, `id` ASC"
     );
 
