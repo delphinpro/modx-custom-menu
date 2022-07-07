@@ -18,10 +18,11 @@ function itemSaveAction(DocumentParser $modx, DatabaseUtils $db)
     if (!$itemData['doc_id']) unset($itemData['doc_id']);
 
     $itemData['title'] = !empty($itemData['title']) ? $itemData['title'] : $itemData['doc_title'];
+    $itemData['parent_id'] = (int)$itemData['parent_id'];
 
     if (!$itemData['id']) {
 
-        $parentId = (int)$itemData['parent_id'];
+        $parentId = $itemData['parent_id'];
         $result = $modx->db->select(
             'MAX(`order_index`)',
             $tableName,

@@ -7,13 +7,13 @@
 
 /**
  * @param DocumentParser $modx
- * @param DatabaseUtils  $db
+ * @param DatabaseUtils $db
  */
 function itemListAction(DocumentParser $modx, DatabaseUtils $db)
 {
     $tableName = $db->getTableName('menu_items');
     $menuId = getIntParam('menuId');
-    if (!$menuId) sendError(__FUNCTION__ . ': menuId undefined');
+    if (!$menuId) sendError(__FUNCTION__.': menuId undefined');
 
     $result = $modx->db->select(
         '*',
@@ -22,7 +22,7 @@ function itemListAction(DocumentParser $modx, DatabaseUtils $db)
         '`order_index`, `id` ASC'
     );
 
-    if (!$result) sendError(__FUNCTION__ . ': ' . $modx->db->getLastError());
+    if (!$result) sendError(__FUNCTION__.': '.$modx->db->getLastError());
 
     $itemList = [];
 
@@ -30,7 +30,7 @@ function itemListAction(DocumentParser $modx, DatabaseUtils $db)
         $itemList[] = $db->castTypes('menu_items', $row, true);
     }
 
-    $itemsTree = buildTree($itemList, null, 'id', 'parentId');
+    $itemsTree = buildTree($itemList, 0, 'id', 'parentId');
 
     sendResponse([
         'itemsTree' => $itemsTree,

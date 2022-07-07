@@ -110,6 +110,11 @@ function init_cm_database($modx)
                 'isNull'  => true,
                 'default' => null,
             ],
+            'props'       => [
+                'type'    => 'TEXT',
+                'isNull'  => true,
+                'default' => null,
+            ],
         ],
         'primary' => 'id',
         'indexes' => [],
