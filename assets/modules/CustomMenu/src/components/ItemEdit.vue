@@ -33,6 +33,7 @@ export default {
             title     : '',
             url       : '',
             alias     : '',
+            props     : null,
         },
 
         parentSelectorShow: false,
@@ -219,8 +220,18 @@ export default {
                         </td>
                     </tr>
                     <tr v-if="!item.replaced">
-                        <td><span>Alias</span></td>
+                        <td><span>Псевдоним</span></td>
                         <td><input v-model="item.alias" class="form-control" placeholder="" readonly type="text"></td>
+                    </tr>
+                    <tr>
+                        <td><span>Пользовательские свойства</span></td>
+                        <td>
+                            <textarea v-model="item.props"
+                                class="form-control"
+                                placeholder="Валидный JSON"
+                                rows="5"
+                            ></textarea>
+                        </td>
                     </tr>
                 </tbody>
             </table>
